@@ -1,0 +1,48 @@
+# Makefile for Cocotb with Verilator simulation
+
+# Default simulator
+SIM ?= verilator
+TOPLEVEL_LANG ?= verilog
+
+# Source files
+EXTRA_ARGS += -F $(HDLET_ROOT)/erbium_digital/verilog/rtl_verilator.f
+
+# The top-level testbench wrapper
+VERILOG_SOURCES += $(HDLET_ROOT)/tb/tb.v
+
+# Verilator configuration
+# -CFLAGS " -std=c++20 -fcoroutines " --timing -sv --timescale 1ns/1ps --debug-check --assert -Wno-lint -Wno-fatal --trace-vcd --trace-structs --output-split 20000 --verilate-jobs 8
+
+# Verilator lint suppressions
+VERILATOR_LINT = \
+ -Wno-enumvalue -Wno-IGNOREDRETURN -Wno-WIDTHEXPAND -Wno-COVERIGN \
+ -Wno-WIDTHTRUNC -Wno-LATCH -Wno-MULTIDRIVEN -Wno-COMBDLY \
+ -Wno-IMPLICIT -Wno-UNOPTFLAT -Wno-INITIALDLY -Wno-CASEINCOMPLETE \
+ -Wno-CONSTRAINTIGN -Wno-NORETURN -Wno-PINMISSING -Wno-REALCVT \
+ -Wno-SHORTREAL -Wno-WAITCONST -Wno-CASEX -Wno-CASTCONST \
+ -Wno-UNSIGNED -Wno-SIDEEFFECT -Wno-WIDTHCONCAT -Wno-ASCRANGE \
+ -Wno-SYMRSVDWORD -Wno-SELRANGE -Wno-DEFOVERRIDE -Wno-ALWCOMBORDER \
+ -Wno-fatal
+
+JOBS = $(NPROC)
+
+EXTRA_ARGS += -O0 -CFLAGS "-std=c++20 -fcoroutines" $(VERILATOR_LINT) \
+              --timing --timescale 1ns/1ps --unroll-count 5000 \
+              -Wno-MODMISSING -Wno-BLKLOOPINIT -Wno-INITIALDLY \
+              -Wno-lint -Wno-fatal -Wno-SPECIFYIGN -Wno-RISEFALLDLY -Wno-ASSIGNIN -Wno-SELRANGE \
+              -Wno-WIDTHCONCAT -Wno-MULTIDRIVEN -Wno-COMBDLY -Wno-UNOPTFLAT \
+              --output-split 5000 \
+              --verilate-jobs 32 --build-jobs 64 -DSIMULATION --trace-structs --trace-fst
+
+
+# Toplevel module configuration
+TOPLEVEL = tb
+MODULE = test_default
+
+# Include Cocotb makefile
+include $(shell cocotb-config --makefiles)/Makefile.sim
+
+# Setup target from original Makefile
+setup:
+	curl -LsSf https://astral.sh/uv/install.sh | sh
+	cd .. && uv sync
