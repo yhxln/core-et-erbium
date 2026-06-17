@@ -13,7 +13,7 @@
 !/doc/
 !/systemC/
 !/systemrdl/
-!/tb/
+!/tb/**
 !/verilog/
 
 # Now bring back the file types we want
@@ -60,3 +60,5 @@ __pycache__
 *ral/
 *DVEfiles/
 *vcdplus*
+tb/elf_run_*/
+tb/*results.xml
