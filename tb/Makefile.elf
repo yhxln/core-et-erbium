@@ -1,0 +1,161 @@
+
+PARENT_MAKE := $(lastword $(MAKEFILE_LIST))
+
+SRUN ?= srun
+
+ifndef ELF_RUN_ROOT
+ELF_RUN_ROOT := elf_run_$(shell date +%s)
+endif
+override ELF_RUN_ROOT := $(abspath $(ELF_RUN_ROOT))
+
+RISCV ?= /tools/aifoundry/riscv/20251103
+export RISCV
+export PATH := $(PATH):$(RISCV)/bin
+
+SIM ?= vcs
+ifeq ($(SIM),verilator)
+    COCOTB_MAKE := $(HDLET_ROOT)/tb/Makefile.verilator
+else
+    COCOTB_MAKE := $(HDLET_ROOT)/tb/Makefile
+endif
+
+ifdef BOOTROM
+    BOOT_PC     := 2008000
+    THREAD_MASK := 0x1
+    MINION_MASK := 0x1
+    TEST_MODE   := 0
+    override BOOTROM := $(abspath $(BOOTROM))
+else
+    BOOT_PC     ?= 40000200
+    THREAD_MASK ?= 0x3
+    MINION_MASK ?= 0xFF
+    TEST_MODE   ?= 1
+endif
+
+ifdef TEST_ELF
+    override TEST_ELF := $(abspath $(TEST_ELF))
+endif
+
+export BOOTROM
+export TEST_ELF
+export BOOT_PC
+export THREAD_MASK
+export MINION_MASK
+export TEST_MODE
+
+TIMEOUT ?= 1000000000
+export TIMEOUT
+
+WAVES ?= 1
+export WAVES
+
+THREAD_TIMEOUT := $(shell echo $$(( $(TIMEOUT) / 2 )))
+
+ifeq ($(VERBOSE),0)
+    SIM_VERBOSE := +COSIM_LOG_LEVEL=2 +EMU_LOG_LEVEL=2
+else
+    SIM_VERBOSE := +COSIM_LOG_LEVEL=0 +EMU_LOG_LEVEL=0
+endif
+
+ifeq ($(RTL_COSIM),0)
+    COSIM_CHK := +CHECKER=0
+else
+    COSIM_CHK := +CHECKER=1 +MONITOR=1
+endif
+
+ifeq ($(STDOUT),1)
+    TO_LOG := 2>&1 | tee run.log
+else
+    TO_LOG := > run.log 2>&1
+endif
+
+COCOTB_MODULE   ?= test_elf
+COCOTB_TESTCASE ?= test_elf
+
+ifeq ($(WFI_ENDS_TEST), 0)
+    WFI_PLUSARG := +WFI_ENDS_TEST=0
+else
+    WFI_PLUSARG := +WFI_ENDS_TEST=1
+endif
+
+MAX_ERR ?= 1
+
+SIM_ARGS= $(EXTRA_SIM_ARGS) \
+	  +START_PC=$(BOOT_PC) \
+	  $(WFI_PLUSARG) \
+	  $(COSIM_CHK) \
+	  +MINION_MASK=$(MINION_MASK) \
+	  +THREAD_MASK=$(THREAD_MASK) \
+	  +maxErrorCount=$(MAX_ERR) \
+	  +COSIM_MAX_NUM_ERR=$(MAX_ERR) \
+	  $(SIM_VERBOSE) \
+	  +thread_timeout=$(THREAD_TIMEOUT) \
+	  +DEFAULT_LOG_LEVEL=2
+
+run_elf: check_autoenv check_test_elf build_sim create_run_dir
+	@elf_name=$(notdir $(TEST_ELF)); \
+	if [ -z "$(TEST_ELF)" ]; then \
+		elf_name="boot_only"; \
+	fi; \
+	run_dir="$(ELF_RUN_ROOT)/test/$$elf_name"; \
+	mkdir -p $$run_dir; \
+	rm -rf $$run_dir/mem_desc.txt; \
+	touch $$run_dir/mem_desc.txt; \
+	\
+	if [ -n "$(BOOTROM)" ]; then \
+		echo "ELF Load: $(BOOTROM)" >> $$run_dir/mem_desc.txt; \
+	fi; \
+	if [ -n "$(TEST_ELF)" ]; then \
+		echo "ELF Load: $(TEST_ELF)" >> $$run_dir/mem_desc.txt; \
+	fi; \
+	\
+	cd $(ELF_RUN_ROOT)/test/$$elf_name; \
+	cp -a $(ELF_RUN_ROOT)/build/.rebuild . ; \
+	\
+	echo "Going to run '$$elf_name' in $$run_dir"; \
+	PYTHONPATH=$(HDLET_ROOT)/tb:$$PYTHONPATH \
+	$(SRUN) $(MAKE) -f $(COCOTB_MAKE) sim \
+		SIM_ARGS="$(SIM_ARGS)" BOOT_PC=$(BOOT_PC) TIMEOUT=$(TIMEOUT) \
+		SIM_BUILD=$(ELF_RUN_ROOT)/build BOOTROM=$(BOOTROM) TEST_ELF=$(TEST_ELF) \
+		TEST_MODE=$(TEST_MODE) WAVES=$(WAVES) MODULE=$(COCOTB_MODULE) COCOTB_TESTCASE=$(COCOTB_TESTCASE) $(TO_LOG); \
+	sed -i 's/<testcase name="$(COCOTB_TESTCASE)"/<testcase name="'"$$elf_name"'"/g' $$run_dir/$(COCOTB_MODULE)_results.xml; \
+	mv $$run_dir/$(COCOTB_MODULE)_results.xml $$run_dir/$${elf_name}_results.xml
+
+build_sim: create_build_dir
+	flock $(ELF_RUN_ROOT)/build/.build_sim.lock sh -c '\
+		$(MAKE) -f $(PARENT_MAKE) build_sim.flock \
+	'
+
+build_sim.flock: $(ELF_RUN_ROOT)/build/simv
+
+$(ELF_RUN_ROOT)/build/simv:
+	echo "Going to build RTL in $(ELF_RUN_ROOT)/build"; \
+	cd $(ELF_RUN_ROOT)/build && \
+	PYTHONPATH=$(HDLET_ROOT)/tb:$$PYTHONPATH \
+	$(SRUN) $(MAKE) -f $(COCOTB_MAKE) \
+		SIM_BUILD=$(ELF_RUN_ROOT)/build TEST_ELF=1 \
+		$(ELF_RUN_ROOT)/build/simv WAVES=$(WAVES) $(TO_LOG)
+
+check_autoenv:
+	@if [ -z "$(REPOROOT)" ]; then \
+		echo "Please source .autoenv.zsh - REPOROOT env variable not defined"; \
+		exit 1; \
+	fi
+
+check_test_elf:
+	@if [ -z "$(TEST_ELF)" ] && [ -z "$(BOOTROM)" ]; then \
+		echo "ERROR: You must call make with TEST_ELF=<file>"; \
+		exit 1; \
+	fi
+
+create_build_dir:
+	@mkdir -p $(ELF_RUN_ROOT)/build
+
+create_run_dir:
+	@mkdir -p $(ELF_RUN_ROOT)/test
+
+include $(HDLET_ROOT)/tb/c_asm_tests/diag.mk
+include $(HDLET_ROOT)/tb/c_asm_tests/mtg.mk
+include $(HDLET_ROOT)/tb/c_asm_tests/ci.mk
+
+.IGNORE: $(DIAG_TESTS) $(MTG_VARIANTS)
