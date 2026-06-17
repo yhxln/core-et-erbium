@@ -3204,7 +3204,7 @@ Reading this register returns a 0x0 value</p>
 
 #### fast_local_barrier0 field
 
-<p>The Esperanto Fast Local Barrier (FLB) extension registers provide fast barrier capabilities across the Minions within a Shire. Multiple barrier counters allow a subset of threads in a Shire to atomically modify a barrier counter and determine whether all participating threads have reached the barrier.<br />
+<p>The CORE-ET Fast Local Barrier (FLB) extension registers provide fast barrier capabilities across the Minions within a Shire. Multiple barrier counters allow a subset of threads in a Shire to atomically modify a barrier counter and determine whether all participating threads have reached the barrier.<br />
 The FLB extension provides 32 barrier counters, each 8 bits wide, supporting an all-thread (64 threads) barrier in the Shire. Barrier counter i should be initialized by software before starting the barrier operation using a regular RISC-V store instruction to address (address + i * 8). Software typically initializes barrier counters to zero, 
 but any value from 0 to 255 is legal.  For maximum performance, FLB counters are directly accessible by threads in the Shire using CSRRW instructions. Threads participating in a barrier use CSRRW to atomically increment the barrier counter. If a thread is the last to join the barrier,
 the CSRRW returns 0x1; otherwise, it returns 0x0.</p>
@@ -3989,35 +3989,35 @@ Examples of this include writes to ET-Minion core registers such as abscmd, axpr
 
 #### anyhalted field
 
-<p>Hardware sets this bit whenever any of the 16 bits of the halted field in the Esperanto Neighborhood Hart Status 0 register for the selected harts is set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
+<p>Hardware sets this bit whenever any of the 16 bits of the halted field in the CORE-ET Neighborhood Hart Status 0 register for the selected harts is set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
 
 #### allhalted field
 
-<p>Hardware sets this bit when all 16 bits of the halted field in the Esperanto Neighborhood Hart Status 0 register for the selected harts are set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
+<p>Hardware sets this bit when all 16 bits of the halted field in the CORE-ET Neighborhood Hart Status 0 register for the selected harts are set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
 
 #### anyrunning field
 
-<p>Hardware sets this bit whenever any of the 16 bits of the running field in the Esperanto Neighborhood Hart Status 0 register for the selected harts is set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
+<p>Hardware sets this bit whenever any of the 16 bits of the running field in the CORE-ET Neighborhood Hart Status 0 register for the selected harts is set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
 
 #### allrunning field
 
-<p>Hardware sets this bit whenever all 16 bits of the running field in the Esperanto Neighborhood Hart Status 0 register for the selected harts are set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
+<p>Hardware sets this bit whenever all 16 bits of the running field in the CORE-ET Neighborhood Hart Status 0 register for the selected harts are set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
 
 #### anyresumeack field
 
-<p>Hardware sets this bit whenever any of the 16 bits of the resumeack field in the Esperanto Neighborhood Hart Status 0 register for the selected harts is set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
+<p>Hardware sets this bit whenever any of the 16 bits of the resumeack field in the CORE-ET Neighborhood Hart Status 0 register for the selected harts is set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
 
 #### allresumeack field
 
-<p>Hardware sets this bit whenever any of the 16 bits of the resumeack field in the Esperanto Neighborhood Hart Status 0 register for the selected harts is set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
+<p>Hardware sets this bit whenever any of the 16 bits of the resumeack field in the CORE-ET Neighborhood Hart Status 0 register for the selected harts is set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
 
 #### anyhavereset field
 
-<p>Hardware sets this bit whenever any 16 bits of the havereset field in the Esperanto Neighborhood Hart Status 0 register for the selected harts are set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
+<p>Hardware sets this bit whenever any 16 bits of the havereset field in the CORE-ET Neighborhood Hart Status 0 register for the selected harts are set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
 
 #### allhavereset field
 
-<p>Hardware sets this bit whenever all of the 16 bits of the havereset field in the Esperanto Neighborhood Hart Status 0 register for the selected harts is set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
+<p>Hardware sets this bit whenever all of the 16 bits of the havereset field in the CORE-ET Neighborhood Hart Status 0 register for the selected harts is set, and the hasel bit in the RISC-V Debug Module Control register (DMCTRL) is 1.</p>
 
 #### anyunavailable field
 

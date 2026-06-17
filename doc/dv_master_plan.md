@@ -31,7 +31,7 @@ Verify functional correctness\, robustness\, and compliance before tape\-out
 
 
 
-* Esperanto Verification Library \(EVL\):
+* CORE-ET Verification Library \(EVL\):
   * Based on SystemVerilog and Universal Verification Methodology \(UVM\)
   * Covers only Neigh and Minion verification
   * Source code:  _[nekkoai/et\-soc](https://github.com/nekkoai/et-soc/tree/erbium/dev)_
@@ -213,9 +213,9 @@ Validation on Alveo U250
 
 * Corner\-case bugs are often difficult to anticipate and even more challenging to reproduce reliably\.
 * Some ET\-SoC\-1 show\-stopper bugs that would have been missed by directed tests:
-  * _[RTLMIN\-5813](https://esperantotech.atlassian.net/browse/RTLMIN-5813)_ : Thread 1 starves Thread 0 to complete a Tensor Store
-  * _[RTLMIN\-5929](https://esperantotech.atlassian.net/browse/RTLMIN-5929)_ : DCACHE replay\_queue and buffer\_array entry counters may not discount allocated entries \(credit/counter leaking\) when gsc and regular operations overlap
-  * _[RTLMIN\-6181](https://esperantotech.atlassian.net/browse/RTLMIN-6181)_ : TensorReduce stalls both threads 0 and 1 from executing VPU instructions ends up in deadlock
+  * Thread 1 starves Thread 0 to complete a Tensor Store
+  * DCACHE replay\_queue and buffer\_array entry counters may not discount allocated entries \(credit/counter leaking\) when gsc and regular operations overlap
+  * TensorReduce stalls both threads 0 and 1 from executing VPU instructions ends up in deadlock
 * For ET\-SoC\-1 we used STING \(commercial\, Synopsys\)\, but for post\-silicon we developed an in\-house random test generator named MTG\.
 * __Proposal:__  revive MTG to fill the gap and boost confidence in the design
 * MTG is written in Python\, does not require a license and is highly configurable
