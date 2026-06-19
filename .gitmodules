@@ -1,0 +1,10 @@
+[submodule "ip/shakti_uncore"]
+	path = ip/shakti_uncore
+	url = https://gitlab.com/shaktiproject/uncore/devices.git
+[submodule "cpu_subsystem"]
+	path = ip/cpu_subsystem
+	url = https://github.com/openhwgroup/core-et.git
+	branch = erbium
+[submodule "ip/et-platform"]
+	path = ip/et-platform
+	url = https://github.com/aifoundry-org/et-platform.git
