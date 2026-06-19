@@ -213,4 +213,6 @@ licenses:
 * Alex Forencich cores — MIT
 * Bluespec, Inc. generated Verilog primitives - BSD-3-Clause
 * Gnarly Grey LLC HyperBus testbench (ip/hyperbus/testbench/...) - MIT
+* Shakti / IIT Madras device IP (ip/qspi/bsv/qspi.bsv, ip/uart/bsv/uart_axi.bsv,
+  ip/uart/bsv/uart_cfg_regs.bsv) — BSD-3-Clause, Copyright (c) 2018 IIT Madras
 * FSF/GPL-noticed linker scripts (tb/c_asm_tests/**/*.ld) — permissive FSF notice
