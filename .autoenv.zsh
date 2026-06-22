@@ -72,6 +72,9 @@ elif command -v riscv64-unknown-elf-gcc >/dev/null 2>&1; then
 	export RISCV="$(cd "$(dirname "$_rvgcc")/.." && pwd)"
 	unset _rvgcc
 fi
+if ! command -v riscv64-unknown-elf-gcc >/dev/null 2>&1; then
+	echo "Warning: riscv64-unknown-elf-gcc not found; set RISCV or add the toolchain bin directory to PATH if this flow builds RISC-V code." >&2
+fi
 
 function update_submodules {
 	cd ip/xspi && git checkout feature/hb_debug && git pull && cd -

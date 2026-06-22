@@ -19,7 +19,7 @@ print-diag-regress-tests:
 	done
 
 
-compile_diag: create_run_dir
+compile_diag: check_riscv_toolchain create_run_dir
 	elf_name=$(notdir $(TEST_ELF)) && \
 	cp -a $(HDLET_ROOT)/tb/c_asm_tests/$$elf_name $(ELF_RUN_ROOT)/test/. && \
 	cd $(ELF_RUN_ROOT)/test/$$elf_name && $(MAKE) 2>&1 | tee compile_diag.log
