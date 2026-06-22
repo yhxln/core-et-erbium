@@ -49,6 +49,9 @@ if [ -n "$BLUESPEC_HOME" ] && [ -d "$BLUESPEC_HOME/lib/Verilog" ]; then
 	: "${BSC_VLIB_TOP:=$BLUESPEC_HOME/lib/Verilog}"
 	: "${BSC_VLIB_ET:=$BLUESPEC_HOME/lib/Verilog}"
 fi
+if [ -z "$BSC_VLIB_TOP" ] || [ -z "$BSC_VLIB_ET" ]; then
+	echo "Warning: BSC_VLIB_TOP/BSC_VLIB_ET not set; set them directly, set BLUESPEC_HOME, or put bsc on PATH if this flow needs Bluespec Verilog primitives." >&2
+fi
 export BSC_VLIB_TOP
 export BSC_VLIB_ET
 export PYTHONPATH=$PYTHONPATH:$HDLET_ROOT
