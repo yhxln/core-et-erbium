@@ -199,10 +199,8 @@ Reset value: 0x0000 0x0000
 
 ## Features Tested
 
-\Begin{multicols}{2}
 * Single/Quad SPI mode.
 * indirect mode (All operations are performed using QSPI registers).
-\End{multicols}
 
 ## Program Flow
 

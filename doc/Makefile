@@ -1,19 +1,20 @@
 title=Erbium Minion Isotope TRM
-client=Internal
-docstatus=Propritery Internal Draft.
-os_docstatus=Review Draft
+client=Public Release
+docstatus=Tapeout Release Candidate
+os_docstatus=Tapeout Release Candidate
 document-sha=$(shell git rev-parse --short HEAD )+post1
 authoremail=jvs@nekko.ai
 variables=-V title:"$(title)" -V client:"$(client)" -Vauthoremail:$(authoremail) -V document-sha:$(document-sha) -V status:"$(docstatus)"
 os_variables=-V title:"$(title)" -V client:"$(client)" -Vauthoremail:$(authoremail) -V document-sha:$(document-sha) -V status:"$(os_docstatus)"
-os_files=index.md signals.md bringup.md prcm.md interrupts.md interconnect.md ../ip/xspi/doc/xspi.md sfpd.md sccr.md  verification.md
-# registers.md 
+os_files=index.md signals.md bringup.md prcm.md interrupts.md interconnect.md
+ip_files=../ip/xspi/doc/xspi.md sfpd.md sccr.md cpu_subsystem.md minion.md gpio.md i2c.md mram.md qspi.md uart.md 
+verif_files=verification.md simulation.md dv_master_plan.md
 BrokenFiles=clint.md 
-files=  $(os_files) minion.md dv_master_plan.md xspi_mm.md cpu_mm.md CHANGELOG.md 
+files=$(os_files) $(ip_files) $(verif_files) xspi_mm.md cpu_mm.md  packaging.md CHANGELOG.md 
 drawing=Erbium_RISCV_Isotope.drawio
 IS_MOUNTED := $(shell [ -f $(drawing) ] && echo "yes" || echo "no")
 
-all: os_reference_manual.pdf reference_manual.pdf
+all: reference_manual.pdf
 os_reference_manual.pdf:.genpng *.md .regspec Makefile
 	pandoc --toc --from=markdown+lists_without_preceding_blankline  -F pandoc-imagine $(os_variables) -o os_reference_manual.pdf -s --template=$(HOME)/.pandoc/template/dyu/aifoundry.template $(os_files) 
 reference_manual.pdf:reference_manual.tex
@@ -44,13 +45,14 @@ ifeq ($(IS_MOUNTED),yes)
 	drawio -x -f png -o output/interrupts.png -p12  $(drawing)
 	drawio -x -f png -o output/bootSequence.png -p14  $(drawing)
 	drawio -x -f png -o output/thermalSensor.png -p17  $(drawing)
+	drawio -x -f png -o output/packaging.png -p18  $(drawing)
 	touch .genpng
 else
 .genpng:
 	@echo "Warning: gdrive not mounted. Using stale/local diagrams ."
 endif
 clean:
-	rm .genpng .regspec reference_manual.pdf os_reference_manual.pdf output/* || echo 1
+	rm .genpng .regspec reference_manual.* os_reference_manual.* output/* || echo 1
 release :clean os_reference_manual.pdf
 	cp  output/*.png /prj/hdl/aifoundry/erbium/docs/silicon/output
 	cp $(os_files) /prj/hdl/aifoundry/erbium/docs/silicon/

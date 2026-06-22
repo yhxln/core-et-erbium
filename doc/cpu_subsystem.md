@@ -336,41 +336,41 @@ Each ET-Minion core has a local PMA checker that validates all transactions. Thi
 
 | Region name        | Cached  | Priv    | Read | Write | Exec   |
 |--------------------|---------|---------|------|-------|--------|
-| System registers   | No      | M/S     | Yes³ | Yes³  | No     |
-| MRAM registers     | No      | M       | Yes² | Yes²  | No     |
-| I2C registers      | No      | M/S     | Yes³ | Yes³  | No     |
-| QSPI registers     | No      | M/S     | Yes³ | Yes³  | No     |
-| UART registers     | No      | M/S     | Yes³ | Yes³  | No     |
+| System registers   | No      | M/S     | Yes$^3$ | Yes$^3$  | No     |
+| MRAM registers     | No      | M       | Yes$^2$ | Yes$^2$  | No     |
+| I2C registers      | No      | M/S     | Yes$^3$ | Yes$^3$  | No     |
+| QSPI registers     | No      | M/S     | Yes$^3$ | Yes$^3$  | No     |
+| UART registers     | No      | M/S     | Yes$^3$ | Yes$^3$  | No     |
 | Bootrom            | Yes     | M/S/U   | Yes  | No    | Yes    |
 | SRAM               | Yes     | M/S/U   | Yes  | Yes   | Yes    |
-| xSPI registers     | No      | M       | Yes² | Yes²  | No     |
-| NIC config         | No      | M       | Yes⁴ | Yes⁴  | No     |
-| MRAM               | Yes     | M/S/U   | Yes⁵ | Yes⁵  | Yes⁵   |
-| CPU subsystem      | No      | D/M/S/U | Yes¹ | Yes¹  | No     |
-| PLIC               | No      | M/S     | Yes⁴ | Yes⁴  | No     |
+| xSPI registers     | No      | M       | Yes$^2$ | Yes$^2$  | No     |
+| NIC config         | No      | M       | Yes$^4$ | Yes$^4$  | No     |
+| MRAM               | Yes     | M/S/U   | Yes$^5$ | Yes$^5$  | Yes$^5$   |
+| CPU subsystem      | No      | D/M/S/U | Yes$^1$ | Yes$^1$  | No     |
+| PLIC               | No      | M/S     | Yes$^4$ | Yes$^4$  | No     |
 
-¹ **Access permitted only when all of the following conditions are met:**
-- Hart’s execution mode ≥ ESR privilege mode
+$^1$ **Access permitted only when all of the following conditions are met:**
+- Hart’s execution mode $\ge$ ESR privilege mode
 - Address maps to an existing ESR register (64‑bit aligned)
 - Read/write access is from a 64‑wide load or store
 - Instruction is not an AMO, TensorOp, or CacheOp
 
-² **Access permitted only when all of the following conditions are met:**
+$^2$ **Access permitted only when all of the following conditions are met:**
 - Read/write access is 64‑bit aligned
 - Read/write access is from a 64‑wide load or store
 - Instruction is not an AMO, TensorOp, or CacheOp
 
-³ **Access permitted only when all of the following conditions are met:**
+$^3$ **Access permitted only when all of the following conditions are met:**
 - Read/write access is 64‑bit aligned
 - Read/write access is from a 32‑wide load or store
 - Instruction is not an AMO, TensorOp, or CacheOp
 
-⁴ **Access permitted only when all of the following conditions are met:**
+$^4$ **Access permitted only when all of the following conditions are met:**
 - Read/write access is 32‑bit aligned
 - Read/write access is from a 32‑wide load or store
 - Instruction is not an AMO, TensorOp, or CacheOp
 
-⁵ **Accesses above the installed MRAM generate a Bus error interrupt.**
+$^5$ **Accesses above the installed MRAM generate a Bus error interrupt.**
 
 
 If access is not permitted by the PMA, the access is not performed and an **Access fault exception** is generated. The PMAs enforce only the coarse‑grain access rules defined in the preceding table. Passing a PMA check does not guarantee that the access is valid.

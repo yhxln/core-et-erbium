@@ -14,17 +14,20 @@ UART has three external pins - Transmitter data pin, Receiver data pin and Trans
 
 The original register IP sizes are variable for the Shakti use cases, and the data duplicates it across for the access size. Although logically 32-bit or less on the IP side, they are accessible as 64-bit values on the system bus.
 
-| Register name | Offset address | IP Side Size | Accessible Size | Description                                          |
-| ------------- | -------------- | ------------ | --------------- | ---------------------------------------------------- |
-| BaudReg       | 0x00           | 16 bits      | 32 bits         | UART Baud Rate Register (Read and write)             |
-| TxReg         | 0x08           | 32 bits      | 32 bits         | UART Transmitter Data Register (Write only)          |
-| RxReg         | 0x10           | 32 bits      | 32 bits         | UART Receiver Data Register (Read Only)              |
-| StatusReg     | 0x18           | 16 bits      | 32 bits         | UART Status Register (Read only)                     |
-| DelayReg      | 0x20           | 16 bits      | 32 bits         | UART Transmitter Delay Register (Read and write)     |
-| ControlReg    | 0x28           | 16 bits      | 32 bits         | UART Control Register (Read and write)               |
-| InterruptEn   | 0x30           | 16 bits      | 32 bits         | UART Interrupt Enable Register (Read and write)      |
-| IQC           | 0x38           | 8 bits       | 32 bits         | Input Qualification Control Register (Read and write)|
-| Rx_Threshold  | 0x40           | 8 bits       | 32 bits         | UART Receiver Threshold Register (Read and write)    |
+| Register name   | Offset address | IP Side Size | Accessible Size | Description                                           |
+| -------------   | -------------- | ------------ | --------------- | ----------------------------------------------------  |
+| BaudReg         | 0x00           | 16 bits      | 32 bits         | UART Baud Rate Register (Read and write)              |
+| TxReg           | 0x08           | 32 bits      | 32 bits         | UART Transmitter Data Register (Write only)           |
+| RxReg           | 0x10           | 32 bits      | 32 bits         | UART Receiver Data Register (Read Only)               |
+| StatusReg       | 0x18           | 16 bits      | 32 bits         | UART Status Register (Read only)                      |
+| DelayReg        | 0x20           | 16 bits      | 32 bits         | UART Transmitter Delay Register (Read and write)      |
+| ControlReg      | 0x28           | 16 bits      | 32 bits         | UART Control Register (Read and write)                |
+| IQC             | 0x30           | 8 bits       | 32 bits         | Input Qualification Control Register (Read and write) |
+| Rx_Threshold    | 0x38           | 8 bits       | 32 bits         | UART Receiver Threshold Register (Read and write)     |
+| InterruptRaw    | 0x48           | 16 bits      | 32 bits         | Raw Interrupt Status                                  |
+| InterruptEnable | 0x50           | 16 bits      | 32 bits         | Interrupt Enable                                      |
+| InterruptStatus | 0x58           | 16 bits      | 32 bits         | The post-masked value of interrupt.                   |
+
 
 ## Register Descriptions
 
@@ -82,8 +85,23 @@ Address offset: 0x28
 | 4:3   | parity       | **Parity selection**: 0 -> no parity, 1 -> odd parity, 2 -> even parity                            |
 | 2:1   | stopbits     | **Stop bits**: 00 -> 1 stop bit, 01 -> 1.5 stop bits, 10 -> 2 stop bits                            |
 
-### InterruptEn
-Address offset: 0x30
+### InterruptRaw
+Address offset: 0x48
+
+| Bits | Identifier             | Comments                                   |
+| ---- | ---------------------- | ------------------------------------------ |
+| 8    | rx_fifo_threshold   | RX FIFO ~80% Full Interrupt         |
+| 7    | break_error         | Break Error Interrupt               |
+| 6    | frame_error         | Frame Error Interrupt               |
+| 5    | overrun_error       | Overrun Interrupt                   |
+| 4    | parity_error        | Parity Error Interrupt              |
+| 3    | rx_not_empty        | Receiver Not Empty Interrupt        |
+| 2    | rx_not_full         | Receiver Not Full Interrupt         |
+| 1    | tx_not_full         | Transmitter Not Full Interrupt      |
+| 0    | tx_done             | Transmission Done Interrupt         |
+
+### InterruptEnable
+Address offset: 0x50
 
 | Bits | Identifier             | Comments                                   |
 | ---- | ---------------------- | ------------------------------------------ |
@@ -97,15 +115,31 @@ Address offset: 0x30
 | 1    | tx_not_full_en         | Transmitter Not Full Interrupt Enable      |
 | 0    | tx_done_en             | Transmission Done Interrupt Enable         |
 
+
+### InterruptStatus
+Address offset: 0x58
+
+| Bits | Identifier             | Comments                                   |
+| ---- | ---------------------- | ------------------------------------------ |
+| 8    | rx_fifo_threshold   | RX FIFO ~80% Full Interrupt         |
+| 7    | break_error         | Break Error Interrupt               |
+| 6    | frame_error         | Frame Error Interrupt               |
+| 5    | overrun_error       | Overrun Interrupt                   |
+| 4    | parity_error        | Parity Error Interrupt              |
+| 3    | rx_not_empty        | Receiver Not Empty Interrupt        |
+| 2    | rx_not_full         | Receiver Not Full Interrupt         |
+| 1    | tx_not_full         | Transmitter Not Full Interrupt      |
+| 0    | tx_done             | Transmission Done Interrupt         |
+
 ### IQC
-Address offset: 0x38
+Address offset: 0x30
 
 | Bits  | Identifier   | Description                                           |
 | ----- | ------------ | ----------------------------------------------------- |
 | 7:0   | qual_cycles  | **Input Qualification Cycles**: Filter cycles for IQC. |
 
 ### Rx_Threshold
-Address offset: 0x40
+Address offset: 0x38
 
 | Bits  | Identifier | Description                                                                                                                                                                 |
 | ----- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -127,3 +161,18 @@ Address offset: 0x40
 1.  **Monitor Status**: Poll `StatusReg[2]` (`rx_notEmpty`) to check if data has been received and stored in the RX FIFO.
 2.  **Read Data**: Read the received word from the `RxReg`.
 3.  **Error Checking**: After reading, check `StatusReg` bits [7:4] for any `break_error`, `frame_error`, `overrun_error`, or `parity_error` that might have occurred during the reception.
+
+### Interrupt
+
+The interrupt mechanism consists of 3 registers, Interrupt Raw, Interrupt Mask and Interrupt Status,
+
+* InterruptStatus is a readonly register and contains the result of anding the Raw and Mask registers. The interrupt generated from uart is teh OR reduce of all bits of interruptStatus. 
+* InterruptStatus is a stick bit set when the corresponding interrupt condition occurs and stays set until it is cleared by the software. Clearing of interrupt is done by writing the current value of the corresponding status bit back to that bit. i.e.
+* Writing a 1 to a cleared status bit sets the interrupt, this can be used to test the interrupt behavior during S/W development/debug.
+
+| Current Value | Write Value | Result  |
+| ---           | ---         | ---     |
+| 0             | 0           | cleared |
+| 1             | 1           | set     |
+| 1             | 0           | set     |
+| 0             | 1           | set     |

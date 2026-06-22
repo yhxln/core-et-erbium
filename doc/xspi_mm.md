@@ -2760,21 +2760,24 @@ cycle (0..8).</p>
 
 - Absolute Address: 0x40004000
 - Base Offset: 0x40004000
-- Size: 0x44
+- Size: 0x5C
 
 <p>UART Registers Refer shakti GC doc for details</p>
 
-|Offset| Identifier |Name|
-|------|------------|----|
-| 0x00 |   BaudReg  |  — |
-| 0x08 |    TxReg   |  — |
-| 0x10 |    RxReg   |  — |
-| 0x18 |  StatusReg |  — |
-| 0x20 |  DelayReg  |  — |
-| 0x28 | ControlReg |  — |
-| 0x30 | InterruptEn|  — |
-| 0x38 |     IQC    |  — |
-| 0x40 |Rx_Threshold|  — |
+|Offset|   Identifier  |Name|
+|------|---------------|----|
+| 0x00 |    BaudReg    |  — |
+| 0x08 |     TxReg     |  — |
+| 0x10 |     RxReg     |  — |
+| 0x18 |   StatusReg   |  — |
+| 0x20 |    DelayReg   |  — |
+| 0x28 |   ControlReg  |  — |
+| 0x30 |      IQC      |  — |
+| 0x38 |  Rx_Threshold |  — |
+| 0x40 |    NotUsed    |  — |
+| 0x48 |  InterruptRaw |  — |
+| 0x50 | InterruptMask |  — |
+| 0x58 |InterruptStatus|  — |
 
 ### BaudReg register
 
@@ -2824,17 +2827,17 @@ cycle (0..8).</p>
 - Base Offset: 0x18
 - Size: 0x4
 
-|Bits|    Identifier   |Access|Reset|Name|
-|----|-----------------|------|-----|----|
-|  0 |     tx_empty    |   r  | 0x0 |  — |
-|  1 |     tx_full     |   r  | 0x0 |  — |
-|  2 |   rx_notEmpty   |   r  | 0x0 |  — |
-|  3 |     rx_full     |   r  | 0x0 |  — |
-|  4 |   parity_error  |   r  | 0x0 |  — |
-|  5 |  overrun_error  |   r  | 0x0 |  — |
-|  6 |   frame_error   |   r  | 0x0 |  — |
-|  7 |   break_error   |   r  | 0x0 |  — |
-|  8 |rx_fifo_threshold|   r  | 0x0 |  — |
+|Bits|    Identifier   |  Access |Reset|Name|
+|----|-----------------|---------|-----|----|
+|  0 |     tx_empty    |rw, woclr| 0x0 |  — |
+|  1 |     tx_full     |rw, woclr| 0x0 |  — |
+|  2 |   rx_notEmpty   |rw, woclr| 0x0 |  — |
+|  3 |     rx_full     |rw, woclr| 0x0 |  — |
+|  4 |   parity_error  |rw, woclr| 0x0 |  — |
+|  5 |  overrun_error  |rw, woclr| 0x0 |  — |
+|  6 |   frame_error   |rw, woclr| 0x0 |  — |
+|  7 |   break_error   |rw, woclr| 0x0 |  — |
+|  8 |rx_fifo_threshold|rw, woclr| 0x0 |  — |
 
 #### tx_empty field
 
@@ -2910,64 +2913,10 @@ cycle (0..8).</p>
 
 <p>char size of data (max 32b)</p>
 
-### InterruptEn register
+### IQC register
 
 - Absolute Address: 0x40004030
 - Base Offset: 0x30
-- Size: 0x4
-
-|Bits|     Identifier     |Access|Reset|Name|
-|----|--------------------|------|-----|----|
-|  0 |     tx_done_en     |  rw  | 0x0 |  — |
-|  1 |   tx_not_full_en   |  rw  | 0x0 |  — |
-|  2 |   rx_not_full_en   |  rw  | 0x0 |  — |
-|  3 |   rx_not_empty_en  |  rw  | 0x0 |  — |
-|  4 |   parity_error_en  |  rw  | 0x0 |  — |
-|  5 |  overrun_error_en  |  rw  | 0x0 |  — |
-|  6 |   frame_error_en   |  rw  | 0x0 |  — |
-|  7 |   break_error_en   |  rw  | 0x0 |  — |
-|  8 |rx_fifo_threshold_en|  rw  | 0x0 |  — |
-
-#### tx_done_en field
-
-<p>Transmission Done Interrupt Enable</p>
-
-#### tx_not_full_en field
-
-<p>Transmitter Not Full Interrupt Enable</p>
-
-#### rx_not_full_en field
-
-<p>Receiver Not Full Interrupt Enable</p>
-
-#### rx_not_empty_en field
-
-<p>Receiver Not Empty Interrupt Enable</p>
-
-#### parity_error_en field
-
-<p>Parity Error Interrupt Enable</p>
-
-#### overrun_error_en field
-
-<p>Overrun Interrupt Enable</p>
-
-#### frame_error_en field
-
-<p>Frame Error Interrupt Enable</p>
-
-#### break_error_en field
-
-<p>Break Error Interrupt Enable</p>
-
-#### rx_fifo_threshold_en field
-
-<p>RX FIFO ~80% Full Interrupt Enable</p>
-
-### IQC register
-
-- Absolute Address: 0x40004038
-- Base Offset: 0x38
 - Size: 0x4
 
 |Bits| Identifier|Access|Reset|Name|
@@ -2980,17 +2929,197 @@ cycle (0..8).</p>
 
 ### Rx_Threshold register
 
+- Absolute Address: 0x40004038
+- Base Offset: 0x38
+- Size: 0x4
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+| 4:0| rx_level |  rw  | 0x5 |  — |
+
+#### rx_level field
+
+
+
+### NotUsed register
+
 - Absolute Address: 0x40004040
 - Base Offset: 0x40
 - Size: 0x4
 
 |Bits|Identifier|Access|Reset|Name|
 |----|----------|------|-----|----|
-| 7:0| rx_level |  rw  | 0x5 |  — |
+| 7:0|  notused |   r  | 0x0 |  — |
 
-#### rx_level field
+#### notused field
 
+<p>notused</p>
 
+### InterruptRaw register
+
+- Absolute Address: 0x40004048
+- Base Offset: 0x48
+- Size: 0x4
+
+<p>RAW interrupt register, the bit is sticky and set when the condition for interrupt occurs and remains set until a value of 1 is written to it.</p>
+
+|Bits|    Identifier   |  Access |Reset|Name|
+|----|-----------------|---------|-----|----|
+|  0 |     tx_done     |rw, woclr| 0x0 |  — |
+|  1 |   tx_not_full   |rw, woclr| 0x0 |  — |
+|  2 |   rx_not_empty  |rw, woclr| 0x0 |  — |
+|  3 |     rx_full     |rw, woclr| 0x0 |  — |
+|  4 |   parity_error  |rw, woclr| 0x0 |  — |
+|  5 |  overrun_error  |rw, woclr| 0x0 |  — |
+|  6 |   frame_error   |rw, woclr| 0x0 |  — |
+|  7 |   break_error   |rw, woclr| 0x0 |  — |
+|  8 |rx_fifo_threshold|rw, woclr| 0x0 |  — |
+
+#### tx_done field
+
+<p>Transmission Done Interrupt</p>
+
+#### tx_not_full field
+
+<p>Transmitter Not Full Interrupt</p>
+
+#### rx_not_empty field
+
+<p>Receiver Not Empty Interrupt</p>
+
+#### rx_full field
+
+<p>Receiver Full Interrupt</p>
+
+#### parity_error field
+
+<p>Parity Error Interrupt</p>
+
+#### overrun_error field
+
+<p>Overrun Interrupt</p>
+
+#### frame_error field
+
+<p>Frame Error Interrupt</p>
+
+#### break_error field
+
+<p>Break Error Interrupt</p>
+
+#### rx_fifo_threshold field
+
+<p>RX FIFO ~80% Full Interrupt</p>
+
+### InterruptMask register
+
+- Absolute Address: 0x40004050
+- Base Offset: 0x50
+- Size: 0x4
+
+<p>interrupt Mask Register, this is anded with the raw interrupt bit. if the result is 1 an interrupt is generated.</p>
+
+|Bits|     Identifier     |Access|Reset|Name|
+|----|--------------------|------|-----|----|
+|  0 |     tx_done_en     |  rw  | 0x0 |  — |
+|  1 |   tx_not_full_en   |  rw  | 0x0 |  — |
+|  2 |   rx_not_empty_en  |  rw  | 0x0 |  — |
+|  3 |     rx_full_en     |  rw  | 0x0 |  — |
+|  4 |   parity_error_en  |  rw  | 0x0 |  — |
+|  5 |  overrun_error_en  |  rw  | 0x0 |  — |
+|  6 |   frame_error_en   |  rw  | 0x0 |  — |
+|  7 |   break_error_en   |  rw  | 0x0 |  — |
+|  8 |rx_fifo_threshold_en|  rw  | 0x0 |  — |
+
+#### tx_done_en field
+
+<p>Transmission Done Interrupt Mask</p>
+
+#### tx_not_full_en field
+
+<p>Transmitter Not Full Interrupt Mask</p>
+
+#### rx_not_empty_en field
+
+<p>Receiver Not Empty Interrupt Mask</p>
+
+#### rx_full_en field
+
+<p>Receiver Full Interrupt Mask</p>
+
+#### parity_error_en field
+
+<p>Parity Error Interrupt Mask</p>
+
+#### overrun_error_en field
+
+<p>Overrun Interrupt Mask</p>
+
+#### frame_error_en field
+
+<p>Frame Error Interrupt Mask</p>
+
+#### break_error_en field
+
+<p>Break Error Interrupt Mask</p>
+
+#### rx_fifo_threshold_en field
+
+<p>RX FIFO ~80% Full Interrupt Mask</p>
+
+### InterruptStatus register
+
+- Absolute Address: 0x40004058
+- Base Offset: 0x58
+- Size: 0x4
+
+|Bits|    Identifier   |Access|Reset|Name|
+|----|-----------------|------|-----|----|
+|  0 |     tx_done     |   r  | 0x0 |  — |
+|  1 |   tx_not_full   |   r  | 0x0 |  — |
+|  2 |   rx_not_empty  |   r  | 0x0 |  — |
+|  3 |     rx_full     |   r  | 0x0 |  — |
+|  4 |   parity_error  |   r  | 0x0 |  — |
+|  5 |  overrun_error  |   r  | 0x0 |  — |
+|  6 |   frame_error   |   r  | 0x0 |  — |
+|  7 |   break_error   |   r  | 0x0 |  — |
+|  8 |rx_fifo_threshold|   r  | 0x0 |  — |
+
+#### tx_done field
+
+<p>Transmission Done Interrupt</p>
+
+#### tx_not_full field
+
+<p>Transmitter Not Full Interrupt</p>
+
+#### rx_not_empty field
+
+<p>Receiver Not Empty Interrupt</p>
+
+#### rx_full field
+
+<p>Receiver Full Interrupt</p>
+
+#### parity_error field
+
+<p>Parity Error Interrupt</p>
+
+#### overrun_error field
+
+<p>Overrun Interrupt</p>
+
+#### frame_error field
+
+<p>Frame Error Interrupt</p>
+
+#### break_error field
+
+<p>Break Error Interrupt</p>
+
+#### rx_fifo_threshold field
+
+<p>RX FIFO ~80% Full Interrupt</p>
 
 ## ROMRAM address map
 
@@ -3720,26 +3849,2409 @@ the CSRRW returns 0x1; otherwise, it returns 0x0.</p>
 
 - Absolute Address: 0x80800000
 - Base Offset: 0x800000
-- Size: 0xF7C8
+- Size: 0x10000
 
-<p>These registers are per hart.([15:12] bits) in the address indicates hart_id. bits[15:13] minion id and bit [12] is thread id.In table below all these bits are indicated as 1</p>
+<p>These registers are per hart.([15:12] bits) in the address indicates hart_id. bits[15:13] minion id and bit [12] is thread id.</p>
+
+|Offset| Identifier |Name|
+|------|------------|----|
+|0x0000| dbg_hart[0]|  — |
+|0x1000| dbg_hart[1]|  — |
+|0x2000| dbg_hart[2]|  — |
+|0x3000| dbg_hart[3]|  — |
+|0x4000| dbg_hart[4]|  — |
+|0x5000| dbg_hart[5]|  — |
+|0x6000| dbg_hart[6]|  — |
+|0x7000| dbg_hart[7]|  — |
+|0x8000| dbg_hart[8]|  — |
+|0x9000| dbg_hart[9]|  — |
+|0xA000|dbg_hart[10]|  — |
+|0xB000|dbg_hart[11]|  — |
+|0xC000|dbg_hart[12]|  — |
+|0xD000|dbg_hart[13]|  — |
+|0xE000|dbg_hart[14]|  — |
+|0xF000|dbg_hart[15]|  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x80800000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
 
 |Offset| Identifier|    Name   |
 |------|-----------|-----------|
-|0xF780|  NXDATA0  |  NXDATA0  |
-|0xF788|  NXDATA1  |  NXDATA1  |
-|0xF790|  AXDATA0  |  AXDATA0  |
-|0xF798|  AXDATA1  |  AXDATA1  |
-|0xF7A0|AXPROGBUFF0|AXPROGBUFF0|
-|0xF7A8|AXPROGBUFF1|AXPROGBUFF1|
-|0xF7B0|NXPROGBUFF0|NXPROGBUFF0|
-|0xF7B8|NXPROGBUFF1|NXPROGBUFF1|
-|0xF7C0|   ABSCMD  |   ABSCMD  |
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
+
+### NXDATA0 register
+
+- Absolute Address: 0x80800780
+- Base Offset: 0x780
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA0_f0|  rw  |  —  |  — |
+|63:32|NXDATA0_f1|  rw  |  —  |  — |
+
+#### NXDATA0_f0 field
+
+<p>The low (nxdata0)  of ddata0</p>
+
+#### NXDATA0_f1 field
+
+<p>WIRI</p>
+
+### NXDATA1 register
+
+- Absolute Address: 0x80800788
+- Base Offset: 0x788
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA1_f0|  rw  |  —  |  — |
+|63:32|NXDATA1_f1|  rw  |  —  |  — |
+
+#### NXDATA1_f0 field
+
+<p>The high (nxdata0)  of ddata0</p>
+
+#### NXDATA1_f1 field
+
+<p>WIRI</p>
+
+### AXDATA0 register
+
+- Absolute Address: 0x80800790
+- Base Offset: 0x790
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA0_f0|  rw  |  —  |  — |
+|63:32|AXDATA0_f1|  rw  |  —  |  — |
+
+#### AXDATA0_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata0 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer</p>
+
+### AXDATA1 register
+
+- Absolute Address: 0x80800798
+- Base Offset: 0x798
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA1_f0|  rw  |  —  |  — |
+|63:32|AXDATA1_f1|  rw  |  —  |  — |
+
+#### AXDATA1_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata1 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer.</p>
+
+### AXPROGBUFF0 register
+
+- Absolute Address: 0x808007A0
+- Base Offset: 0x7A0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF0|  rw  |  —  |  — |
+
+#### AXPROGBUFF0 field
+
+<p>This register shadows the nxprogbuf0 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### AXPROGBUFF1 register
+
+- Absolute Address: 0x808007A8
+- Base Offset: 0x7A8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF1|  rw  |  —  |  — |
+
+#### AXPROGBUFF1 field
+
+<p>This register shadows the nxprogbuf1 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### NXPROGBUFF0 register
+
+- Absolute Address: 0x808007B0
+- Base Offset: 0x7B0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF0|  rw  |  —  |  — |
+
+#### NXPROGBUFF0 field
+
+<p>This register holds bits 64-95 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### NXPROGBUFF1 register
+
+- Absolute Address: 0x808007B8
+- Base Offset: 0x7B8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF1|  rw  |  —  |  — |
+
+#### NXPROGBUFF1 field
+
+<p>This register holds bits 96-127 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### ABSCMD register
+
+- Absolute Address: 0x808007C0
+- Base Offset: 0x7C0
+- Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+|63:0|  ABSCMD  |  rw  |  —  |  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x80801000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
+
+|Offset| Identifier|    Name   |
+|------|-----------|-----------|
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
+
+### NXDATA0 register
+
+- Absolute Address: 0x80801780
+- Base Offset: 0x780
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA0_f0|  rw  |  —  |  — |
+|63:32|NXDATA0_f1|  rw  |  —  |  — |
+
+#### NXDATA0_f0 field
+
+<p>The low (nxdata0)  of ddata0</p>
+
+#### NXDATA0_f1 field
+
+<p>WIRI</p>
+
+### NXDATA1 register
+
+- Absolute Address: 0x80801788
+- Base Offset: 0x788
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA1_f0|  rw  |  —  |  — |
+|63:32|NXDATA1_f1|  rw  |  —  |  — |
+
+#### NXDATA1_f0 field
+
+<p>The high (nxdata0)  of ddata0</p>
+
+#### NXDATA1_f1 field
+
+<p>WIRI</p>
+
+### AXDATA0 register
+
+- Absolute Address: 0x80801790
+- Base Offset: 0x790
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA0_f0|  rw  |  —  |  — |
+|63:32|AXDATA0_f1|  rw  |  —  |  — |
+
+#### AXDATA0_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata0 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer</p>
+
+### AXDATA1 register
+
+- Absolute Address: 0x80801798
+- Base Offset: 0x798
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA1_f0|  rw  |  —  |  — |
+|63:32|AXDATA1_f1|  rw  |  —  |  — |
+
+#### AXDATA1_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata1 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer.</p>
+
+### AXPROGBUFF0 register
+
+- Absolute Address: 0x808017A0
+- Base Offset: 0x7A0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF0|  rw  |  —  |  — |
+
+#### AXPROGBUFF0 field
+
+<p>This register shadows the nxprogbuf0 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### AXPROGBUFF1 register
+
+- Absolute Address: 0x808017A8
+- Base Offset: 0x7A8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF1|  rw  |  —  |  — |
+
+#### AXPROGBUFF1 field
+
+<p>This register shadows the nxprogbuf1 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### NXPROGBUFF0 register
+
+- Absolute Address: 0x808017B0
+- Base Offset: 0x7B0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF0|  rw  |  —  |  — |
+
+#### NXPROGBUFF0 field
+
+<p>This register holds bits 64-95 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### NXPROGBUFF1 register
+
+- Absolute Address: 0x808017B8
+- Base Offset: 0x7B8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF1|  rw  |  —  |  — |
+
+#### NXPROGBUFF1 field
+
+<p>This register holds bits 96-127 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### ABSCMD register
+
+- Absolute Address: 0x808017C0
+- Base Offset: 0x7C0
+- Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+|63:0|  ABSCMD  |  rw  |  —  |  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x80802000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
+
+|Offset| Identifier|    Name   |
+|------|-----------|-----------|
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
+
+### NXDATA0 register
+
+- Absolute Address: 0x80802780
+- Base Offset: 0x780
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA0_f0|  rw  |  —  |  — |
+|63:32|NXDATA0_f1|  rw  |  —  |  — |
+
+#### NXDATA0_f0 field
+
+<p>The low (nxdata0)  of ddata0</p>
+
+#### NXDATA0_f1 field
+
+<p>WIRI</p>
+
+### NXDATA1 register
+
+- Absolute Address: 0x80802788
+- Base Offset: 0x788
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA1_f0|  rw  |  —  |  — |
+|63:32|NXDATA1_f1|  rw  |  —  |  — |
+
+#### NXDATA1_f0 field
+
+<p>The high (nxdata0)  of ddata0</p>
+
+#### NXDATA1_f1 field
+
+<p>WIRI</p>
+
+### AXDATA0 register
+
+- Absolute Address: 0x80802790
+- Base Offset: 0x790
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA0_f0|  rw  |  —  |  — |
+|63:32|AXDATA0_f1|  rw  |  —  |  — |
+
+#### AXDATA0_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata0 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer</p>
+
+### AXDATA1 register
+
+- Absolute Address: 0x80802798
+- Base Offset: 0x798
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA1_f0|  rw  |  —  |  — |
+|63:32|AXDATA1_f1|  rw  |  —  |  — |
+
+#### AXDATA1_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata1 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer.</p>
+
+### AXPROGBUFF0 register
+
+- Absolute Address: 0x808027A0
+- Base Offset: 0x7A0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF0|  rw  |  —  |  — |
+
+#### AXPROGBUFF0 field
+
+<p>This register shadows the nxprogbuf0 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### AXPROGBUFF1 register
+
+- Absolute Address: 0x808027A8
+- Base Offset: 0x7A8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF1|  rw  |  —  |  — |
+
+#### AXPROGBUFF1 field
+
+<p>This register shadows the nxprogbuf1 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### NXPROGBUFF0 register
+
+- Absolute Address: 0x808027B0
+- Base Offset: 0x7B0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF0|  rw  |  —  |  — |
+
+#### NXPROGBUFF0 field
+
+<p>This register holds bits 64-95 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### NXPROGBUFF1 register
+
+- Absolute Address: 0x808027B8
+- Base Offset: 0x7B8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF1|  rw  |  —  |  — |
+
+#### NXPROGBUFF1 field
+
+<p>This register holds bits 96-127 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### ABSCMD register
+
+- Absolute Address: 0x808027C0
+- Base Offset: 0x7C0
+- Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+|63:0|  ABSCMD  |  rw  |  —  |  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x80803000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
+
+|Offset| Identifier|    Name   |
+|------|-----------|-----------|
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
+
+### NXDATA0 register
+
+- Absolute Address: 0x80803780
+- Base Offset: 0x780
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA0_f0|  rw  |  —  |  — |
+|63:32|NXDATA0_f1|  rw  |  —  |  — |
+
+#### NXDATA0_f0 field
+
+<p>The low (nxdata0)  of ddata0</p>
+
+#### NXDATA0_f1 field
+
+<p>WIRI</p>
+
+### NXDATA1 register
+
+- Absolute Address: 0x80803788
+- Base Offset: 0x788
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA1_f0|  rw  |  —  |  — |
+|63:32|NXDATA1_f1|  rw  |  —  |  — |
+
+#### NXDATA1_f0 field
+
+<p>The high (nxdata0)  of ddata0</p>
+
+#### NXDATA1_f1 field
+
+<p>WIRI</p>
+
+### AXDATA0 register
+
+- Absolute Address: 0x80803790
+- Base Offset: 0x790
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA0_f0|  rw  |  —  |  — |
+|63:32|AXDATA0_f1|  rw  |  —  |  — |
+
+#### AXDATA0_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata0 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer</p>
+
+### AXDATA1 register
+
+- Absolute Address: 0x80803798
+- Base Offset: 0x798
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA1_f0|  rw  |  —  |  — |
+|63:32|AXDATA1_f1|  rw  |  —  |  — |
+
+#### AXDATA1_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata1 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer.</p>
+
+### AXPROGBUFF0 register
+
+- Absolute Address: 0x808037A0
+- Base Offset: 0x7A0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF0|  rw  |  —  |  — |
+
+#### AXPROGBUFF0 field
+
+<p>This register shadows the nxprogbuf0 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### AXPROGBUFF1 register
+
+- Absolute Address: 0x808037A8
+- Base Offset: 0x7A8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF1|  rw  |  —  |  — |
+
+#### AXPROGBUFF1 field
+
+<p>This register shadows the nxprogbuf1 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### NXPROGBUFF0 register
+
+- Absolute Address: 0x808037B0
+- Base Offset: 0x7B0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF0|  rw  |  —  |  — |
+
+#### NXPROGBUFF0 field
+
+<p>This register holds bits 64-95 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### NXPROGBUFF1 register
+
+- Absolute Address: 0x808037B8
+- Base Offset: 0x7B8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF1|  rw  |  —  |  — |
+
+#### NXPROGBUFF1 field
+
+<p>This register holds bits 96-127 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### ABSCMD register
+
+- Absolute Address: 0x808037C0
+- Base Offset: 0x7C0
+- Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+|63:0|  ABSCMD  |  rw  |  —  |  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x80804000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
+
+|Offset| Identifier|    Name   |
+|------|-----------|-----------|
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
+
+### NXDATA0 register
+
+- Absolute Address: 0x80804780
+- Base Offset: 0x780
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA0_f0|  rw  |  —  |  — |
+|63:32|NXDATA0_f1|  rw  |  —  |  — |
+
+#### NXDATA0_f0 field
+
+<p>The low (nxdata0)  of ddata0</p>
+
+#### NXDATA0_f1 field
+
+<p>WIRI</p>
+
+### NXDATA1 register
+
+- Absolute Address: 0x80804788
+- Base Offset: 0x788
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA1_f0|  rw  |  —  |  — |
+|63:32|NXDATA1_f1|  rw  |  —  |  — |
+
+#### NXDATA1_f0 field
+
+<p>The high (nxdata0)  of ddata0</p>
+
+#### NXDATA1_f1 field
+
+<p>WIRI</p>
+
+### AXDATA0 register
+
+- Absolute Address: 0x80804790
+- Base Offset: 0x790
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA0_f0|  rw  |  —  |  — |
+|63:32|AXDATA0_f1|  rw  |  —  |  — |
+
+#### AXDATA0_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata0 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer</p>
+
+### AXDATA1 register
+
+- Absolute Address: 0x80804798
+- Base Offset: 0x798
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA1_f0|  rw  |  —  |  — |
+|63:32|AXDATA1_f1|  rw  |  —  |  — |
+
+#### AXDATA1_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata1 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer.</p>
+
+### AXPROGBUFF0 register
+
+- Absolute Address: 0x808047A0
+- Base Offset: 0x7A0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF0|  rw  |  —  |  — |
+
+#### AXPROGBUFF0 field
+
+<p>This register shadows the nxprogbuf0 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### AXPROGBUFF1 register
+
+- Absolute Address: 0x808047A8
+- Base Offset: 0x7A8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF1|  rw  |  —  |  — |
+
+#### AXPROGBUFF1 field
+
+<p>This register shadows the nxprogbuf1 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### NXPROGBUFF0 register
+
+- Absolute Address: 0x808047B0
+- Base Offset: 0x7B0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF0|  rw  |  —  |  — |
+
+#### NXPROGBUFF0 field
+
+<p>This register holds bits 64-95 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### NXPROGBUFF1 register
+
+- Absolute Address: 0x808047B8
+- Base Offset: 0x7B8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF1|  rw  |  —  |  — |
+
+#### NXPROGBUFF1 field
+
+<p>This register holds bits 96-127 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### ABSCMD register
+
+- Absolute Address: 0x808047C0
+- Base Offset: 0x7C0
+- Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+|63:0|  ABSCMD  |  rw  |  —  |  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x80805000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
+
+|Offset| Identifier|    Name   |
+|------|-----------|-----------|
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
+
+### NXDATA0 register
+
+- Absolute Address: 0x80805780
+- Base Offset: 0x780
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA0_f0|  rw  |  —  |  — |
+|63:32|NXDATA0_f1|  rw  |  —  |  — |
+
+#### NXDATA0_f0 field
+
+<p>The low (nxdata0)  of ddata0</p>
+
+#### NXDATA0_f1 field
+
+<p>WIRI</p>
+
+### NXDATA1 register
+
+- Absolute Address: 0x80805788
+- Base Offset: 0x788
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA1_f0|  rw  |  —  |  — |
+|63:32|NXDATA1_f1|  rw  |  —  |  — |
+
+#### NXDATA1_f0 field
+
+<p>The high (nxdata0)  of ddata0</p>
+
+#### NXDATA1_f1 field
+
+<p>WIRI</p>
+
+### AXDATA0 register
+
+- Absolute Address: 0x80805790
+- Base Offset: 0x790
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA0_f0|  rw  |  —  |  — |
+|63:32|AXDATA0_f1|  rw  |  —  |  — |
+
+#### AXDATA0_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata0 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer</p>
+
+### AXDATA1 register
+
+- Absolute Address: 0x80805798
+- Base Offset: 0x798
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA1_f0|  rw  |  —  |  — |
+|63:32|AXDATA1_f1|  rw  |  —  |  — |
+
+#### AXDATA1_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata1 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer.</p>
+
+### AXPROGBUFF0 register
+
+- Absolute Address: 0x808057A0
+- Base Offset: 0x7A0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF0|  rw  |  —  |  — |
+
+#### AXPROGBUFF0 field
+
+<p>This register shadows the nxprogbuf0 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### AXPROGBUFF1 register
+
+- Absolute Address: 0x808057A8
+- Base Offset: 0x7A8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF1|  rw  |  —  |  — |
+
+#### AXPROGBUFF1 field
+
+<p>This register shadows the nxprogbuf1 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### NXPROGBUFF0 register
+
+- Absolute Address: 0x808057B0
+- Base Offset: 0x7B0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF0|  rw  |  —  |  — |
+
+#### NXPROGBUFF0 field
+
+<p>This register holds bits 64-95 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### NXPROGBUFF1 register
+
+- Absolute Address: 0x808057B8
+- Base Offset: 0x7B8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF1|  rw  |  —  |  — |
+
+#### NXPROGBUFF1 field
+
+<p>This register holds bits 96-127 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### ABSCMD register
+
+- Absolute Address: 0x808057C0
+- Base Offset: 0x7C0
+- Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+|63:0|  ABSCMD  |  rw  |  —  |  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x80806000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
+
+|Offset| Identifier|    Name   |
+|------|-----------|-----------|
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
+
+### NXDATA0 register
+
+- Absolute Address: 0x80806780
+- Base Offset: 0x780
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA0_f0|  rw  |  —  |  — |
+|63:32|NXDATA0_f1|  rw  |  —  |  — |
+
+#### NXDATA0_f0 field
+
+<p>The low (nxdata0)  of ddata0</p>
+
+#### NXDATA0_f1 field
+
+<p>WIRI</p>
+
+### NXDATA1 register
+
+- Absolute Address: 0x80806788
+- Base Offset: 0x788
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA1_f0|  rw  |  —  |  — |
+|63:32|NXDATA1_f1|  rw  |  —  |  — |
+
+#### NXDATA1_f0 field
+
+<p>The high (nxdata0)  of ddata0</p>
+
+#### NXDATA1_f1 field
+
+<p>WIRI</p>
+
+### AXDATA0 register
+
+- Absolute Address: 0x80806790
+- Base Offset: 0x790
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA0_f0|  rw  |  —  |  — |
+|63:32|AXDATA0_f1|  rw  |  —  |  — |
+
+#### AXDATA0_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata0 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer</p>
+
+### AXDATA1 register
+
+- Absolute Address: 0x80806798
+- Base Offset: 0x798
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA1_f0|  rw  |  —  |  — |
+|63:32|AXDATA1_f1|  rw  |  —  |  — |
+
+#### AXDATA1_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata1 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer.</p>
+
+### AXPROGBUFF0 register
+
+- Absolute Address: 0x808067A0
+- Base Offset: 0x7A0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF0|  rw  |  —  |  — |
+
+#### AXPROGBUFF0 field
+
+<p>This register shadows the nxprogbuf0 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### AXPROGBUFF1 register
+
+- Absolute Address: 0x808067A8
+- Base Offset: 0x7A8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF1|  rw  |  —  |  — |
+
+#### AXPROGBUFF1 field
+
+<p>This register shadows the nxprogbuf1 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### NXPROGBUFF0 register
+
+- Absolute Address: 0x808067B0
+- Base Offset: 0x7B0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF0|  rw  |  —  |  — |
+
+#### NXPROGBUFF0 field
+
+<p>This register holds bits 64-95 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### NXPROGBUFF1 register
+
+- Absolute Address: 0x808067B8
+- Base Offset: 0x7B8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF1|  rw  |  —  |  — |
+
+#### NXPROGBUFF1 field
+
+<p>This register holds bits 96-127 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### ABSCMD register
+
+- Absolute Address: 0x808067C0
+- Base Offset: 0x7C0
+- Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+|63:0|  ABSCMD  |  rw  |  —  |  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x80807000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
+
+|Offset| Identifier|    Name   |
+|------|-----------|-----------|
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
+
+### NXDATA0 register
+
+- Absolute Address: 0x80807780
+- Base Offset: 0x780
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA0_f0|  rw  |  —  |  — |
+|63:32|NXDATA0_f1|  rw  |  —  |  — |
+
+#### NXDATA0_f0 field
+
+<p>The low (nxdata0)  of ddata0</p>
+
+#### NXDATA0_f1 field
+
+<p>WIRI</p>
+
+### NXDATA1 register
+
+- Absolute Address: 0x80807788
+- Base Offset: 0x788
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA1_f0|  rw  |  —  |  — |
+|63:32|NXDATA1_f1|  rw  |  —  |  — |
+
+#### NXDATA1_f0 field
+
+<p>The high (nxdata0)  of ddata0</p>
+
+#### NXDATA1_f1 field
+
+<p>WIRI</p>
+
+### AXDATA0 register
+
+- Absolute Address: 0x80807790
+- Base Offset: 0x790
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA0_f0|  rw  |  —  |  — |
+|63:32|AXDATA0_f1|  rw  |  —  |  — |
+
+#### AXDATA0_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata0 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer</p>
+
+### AXDATA1 register
+
+- Absolute Address: 0x80807798
+- Base Offset: 0x798
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA1_f0|  rw  |  —  |  — |
+|63:32|AXDATA1_f1|  rw  |  —  |  — |
+
+#### AXDATA1_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata1 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer.</p>
+
+### AXPROGBUFF0 register
+
+- Absolute Address: 0x808077A0
+- Base Offset: 0x7A0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF0|  rw  |  —  |  — |
+
+#### AXPROGBUFF0 field
+
+<p>This register shadows the nxprogbuf0 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### AXPROGBUFF1 register
+
+- Absolute Address: 0x808077A8
+- Base Offset: 0x7A8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF1|  rw  |  —  |  — |
+
+#### AXPROGBUFF1 field
+
+<p>This register shadows the nxprogbuf1 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### NXPROGBUFF0 register
+
+- Absolute Address: 0x808077B0
+- Base Offset: 0x7B0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF0|  rw  |  —  |  — |
+
+#### NXPROGBUFF0 field
+
+<p>This register holds bits 64-95 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### NXPROGBUFF1 register
+
+- Absolute Address: 0x808077B8
+- Base Offset: 0x7B8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF1|  rw  |  —  |  — |
+
+#### NXPROGBUFF1 field
+
+<p>This register holds bits 96-127 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### ABSCMD register
+
+- Absolute Address: 0x808077C0
+- Base Offset: 0x7C0
+- Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+|63:0|  ABSCMD  |  rw  |  —  |  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x80808000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
+
+|Offset| Identifier|    Name   |
+|------|-----------|-----------|
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
+
+### NXDATA0 register
+
+- Absolute Address: 0x80808780
+- Base Offset: 0x780
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA0_f0|  rw  |  —  |  — |
+|63:32|NXDATA0_f1|  rw  |  —  |  — |
+
+#### NXDATA0_f0 field
+
+<p>The low (nxdata0)  of ddata0</p>
+
+#### NXDATA0_f1 field
+
+<p>WIRI</p>
+
+### NXDATA1 register
+
+- Absolute Address: 0x80808788
+- Base Offset: 0x788
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA1_f0|  rw  |  —  |  — |
+|63:32|NXDATA1_f1|  rw  |  —  |  — |
+
+#### NXDATA1_f0 field
+
+<p>The high (nxdata0)  of ddata0</p>
+
+#### NXDATA1_f1 field
+
+<p>WIRI</p>
+
+### AXDATA0 register
+
+- Absolute Address: 0x80808790
+- Base Offset: 0x790
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA0_f0|  rw  |  —  |  — |
+|63:32|AXDATA0_f1|  rw  |  —  |  — |
+
+#### AXDATA0_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata0 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer</p>
+
+### AXDATA1 register
+
+- Absolute Address: 0x80808798
+- Base Offset: 0x798
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA1_f0|  rw  |  —  |  — |
+|63:32|AXDATA1_f1|  rw  |  —  |  — |
+
+#### AXDATA1_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata1 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer.</p>
+
+### AXPROGBUFF0 register
+
+- Absolute Address: 0x808087A0
+- Base Offset: 0x7A0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF0|  rw  |  —  |  — |
+
+#### AXPROGBUFF0 field
+
+<p>This register shadows the nxprogbuf0 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### AXPROGBUFF1 register
+
+- Absolute Address: 0x808087A8
+- Base Offset: 0x7A8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF1|  rw  |  —  |  — |
+
+#### AXPROGBUFF1 field
+
+<p>This register shadows the nxprogbuf1 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### NXPROGBUFF0 register
+
+- Absolute Address: 0x808087B0
+- Base Offset: 0x7B0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF0|  rw  |  —  |  — |
+
+#### NXPROGBUFF0 field
+
+<p>This register holds bits 64-95 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### NXPROGBUFF1 register
+
+- Absolute Address: 0x808087B8
+- Base Offset: 0x7B8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF1|  rw  |  —  |  — |
+
+#### NXPROGBUFF1 field
+
+<p>This register holds bits 96-127 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### ABSCMD register
+
+- Absolute Address: 0x808087C0
+- Base Offset: 0x7C0
+- Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+|63:0|  ABSCMD  |  rw  |  —  |  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x80809000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
+
+|Offset| Identifier|    Name   |
+|------|-----------|-----------|
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
+
+### NXDATA0 register
+
+- Absolute Address: 0x80809780
+- Base Offset: 0x780
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA0_f0|  rw  |  —  |  — |
+|63:32|NXDATA0_f1|  rw  |  —  |  — |
+
+#### NXDATA0_f0 field
+
+<p>The low (nxdata0)  of ddata0</p>
+
+#### NXDATA0_f1 field
+
+<p>WIRI</p>
+
+### NXDATA1 register
+
+- Absolute Address: 0x80809788
+- Base Offset: 0x788
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA1_f0|  rw  |  —  |  — |
+|63:32|NXDATA1_f1|  rw  |  —  |  — |
+
+#### NXDATA1_f0 field
+
+<p>The high (nxdata0)  of ddata0</p>
+
+#### NXDATA1_f1 field
+
+<p>WIRI</p>
+
+### AXDATA0 register
+
+- Absolute Address: 0x80809790
+- Base Offset: 0x790
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA0_f0|  rw  |  —  |  — |
+|63:32|AXDATA0_f1|  rw  |  —  |  — |
+
+#### AXDATA0_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata0 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer</p>
+
+### AXDATA1 register
+
+- Absolute Address: 0x80809798
+- Base Offset: 0x798
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA1_f0|  rw  |  —  |  — |
+|63:32|AXDATA1_f1|  rw  |  —  |  — |
+
+#### AXDATA1_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata1 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer.</p>
+
+### AXPROGBUFF0 register
+
+- Absolute Address: 0x808097A0
+- Base Offset: 0x7A0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF0|  rw  |  —  |  — |
+
+#### AXPROGBUFF0 field
+
+<p>This register shadows the nxprogbuf0 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### AXPROGBUFF1 register
+
+- Absolute Address: 0x808097A8
+- Base Offset: 0x7A8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF1|  rw  |  —  |  — |
+
+#### AXPROGBUFF1 field
+
+<p>This register shadows the nxprogbuf1 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### NXPROGBUFF0 register
+
+- Absolute Address: 0x808097B0
+- Base Offset: 0x7B0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF0|  rw  |  —  |  — |
+
+#### NXPROGBUFF0 field
+
+<p>This register holds bits 64-95 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### NXPROGBUFF1 register
+
+- Absolute Address: 0x808097B8
+- Base Offset: 0x7B8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF1|  rw  |  —  |  — |
+
+#### NXPROGBUFF1 field
+
+<p>This register holds bits 96-127 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### ABSCMD register
+
+- Absolute Address: 0x808097C0
+- Base Offset: 0x7C0
+- Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+|63:0|  ABSCMD  |  rw  |  —  |  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x8080A000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
+
+|Offset| Identifier|    Name   |
+|------|-----------|-----------|
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
+
+### NXDATA0 register
+
+- Absolute Address: 0x8080A780
+- Base Offset: 0x780
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA0_f0|  rw  |  —  |  — |
+|63:32|NXDATA0_f1|  rw  |  —  |  — |
+
+#### NXDATA0_f0 field
+
+<p>The low (nxdata0)  of ddata0</p>
+
+#### NXDATA0_f1 field
+
+<p>WIRI</p>
+
+### NXDATA1 register
+
+- Absolute Address: 0x8080A788
+- Base Offset: 0x788
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA1_f0|  rw  |  —  |  — |
+|63:32|NXDATA1_f1|  rw  |  —  |  — |
+
+#### NXDATA1_f0 field
+
+<p>The high (nxdata0)  of ddata0</p>
+
+#### NXDATA1_f1 field
+
+<p>WIRI</p>
+
+### AXDATA0 register
+
+- Absolute Address: 0x8080A790
+- Base Offset: 0x790
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA0_f0|  rw  |  —  |  — |
+|63:32|AXDATA0_f1|  rw  |  —  |  — |
+
+#### AXDATA0_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata0 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer</p>
+
+### AXDATA1 register
+
+- Absolute Address: 0x8080A798
+- Base Offset: 0x798
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA1_f0|  rw  |  —  |  — |
+|63:32|AXDATA1_f1|  rw  |  —  |  — |
+
+#### AXDATA1_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata1 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer.</p>
+
+### AXPROGBUFF0 register
+
+- Absolute Address: 0x8080A7A0
+- Base Offset: 0x7A0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF0|  rw  |  —  |  — |
+
+#### AXPROGBUFF0 field
+
+<p>This register shadows the nxprogbuf0 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### AXPROGBUFF1 register
+
+- Absolute Address: 0x8080A7A8
+- Base Offset: 0x7A8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF1|  rw  |  —  |  — |
+
+#### AXPROGBUFF1 field
+
+<p>This register shadows the nxprogbuf1 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### NXPROGBUFF0 register
+
+- Absolute Address: 0x8080A7B0
+- Base Offset: 0x7B0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF0|  rw  |  —  |  — |
+
+#### NXPROGBUFF0 field
+
+<p>This register holds bits 64-95 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### NXPROGBUFF1 register
+
+- Absolute Address: 0x8080A7B8
+- Base Offset: 0x7B8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF1|  rw  |  —  |  — |
+
+#### NXPROGBUFF1 field
+
+<p>This register holds bits 96-127 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### ABSCMD register
+
+- Absolute Address: 0x8080A7C0
+- Base Offset: 0x7C0
+- Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+|63:0|  ABSCMD  |  rw  |  —  |  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x8080B000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
+
+|Offset| Identifier|    Name   |
+|------|-----------|-----------|
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
+
+### NXDATA0 register
+
+- Absolute Address: 0x8080B780
+- Base Offset: 0x780
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA0_f0|  rw  |  —  |  — |
+|63:32|NXDATA0_f1|  rw  |  —  |  — |
+
+#### NXDATA0_f0 field
+
+<p>The low (nxdata0)  of ddata0</p>
+
+#### NXDATA0_f1 field
+
+<p>WIRI</p>
+
+### NXDATA1 register
+
+- Absolute Address: 0x8080B788
+- Base Offset: 0x788
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA1_f0|  rw  |  —  |  — |
+|63:32|NXDATA1_f1|  rw  |  —  |  — |
+
+#### NXDATA1_f0 field
+
+<p>The high (nxdata0)  of ddata0</p>
+
+#### NXDATA1_f1 field
+
+<p>WIRI</p>
+
+### AXDATA0 register
+
+- Absolute Address: 0x8080B790
+- Base Offset: 0x790
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA0_f0|  rw  |  —  |  — |
+|63:32|AXDATA0_f1|  rw  |  —  |  — |
+
+#### AXDATA0_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata0 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer</p>
+
+### AXDATA1 register
+
+- Absolute Address: 0x8080B798
+- Base Offset: 0x798
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA1_f0|  rw  |  —  |  — |
+|63:32|AXDATA1_f1|  rw  |  —  |  — |
+
+#### AXDATA1_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata1 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer.</p>
+
+### AXPROGBUFF0 register
+
+- Absolute Address: 0x8080B7A0
+- Base Offset: 0x7A0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF0|  rw  |  —  |  — |
+
+#### AXPROGBUFF0 field
+
+<p>This register shadows the nxprogbuf0 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### AXPROGBUFF1 register
+
+- Absolute Address: 0x8080B7A8
+- Base Offset: 0x7A8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF1|  rw  |  —  |  — |
+
+#### AXPROGBUFF1 field
+
+<p>This register shadows the nxprogbuf1 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### NXPROGBUFF0 register
+
+- Absolute Address: 0x8080B7B0
+- Base Offset: 0x7B0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF0|  rw  |  —  |  — |
+
+#### NXPROGBUFF0 field
+
+<p>This register holds bits 64-95 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### NXPROGBUFF1 register
+
+- Absolute Address: 0x8080B7B8
+- Base Offset: 0x7B8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF1|  rw  |  —  |  — |
+
+#### NXPROGBUFF1 field
+
+<p>This register holds bits 96-127 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### ABSCMD register
+
+- Absolute Address: 0x8080B7C0
+- Base Offset: 0x7C0
+- Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+|63:0|  ABSCMD  |  rw  |  —  |  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x8080C000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
+
+|Offset| Identifier|    Name   |
+|------|-----------|-----------|
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
+
+### NXDATA0 register
+
+- Absolute Address: 0x8080C780
+- Base Offset: 0x780
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA0_f0|  rw  |  —  |  — |
+|63:32|NXDATA0_f1|  rw  |  —  |  — |
+
+#### NXDATA0_f0 field
+
+<p>The low (nxdata0)  of ddata0</p>
+
+#### NXDATA0_f1 field
+
+<p>WIRI</p>
+
+### NXDATA1 register
+
+- Absolute Address: 0x8080C788
+- Base Offset: 0x788
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA1_f0|  rw  |  —  |  — |
+|63:32|NXDATA1_f1|  rw  |  —  |  — |
+
+#### NXDATA1_f0 field
+
+<p>The high (nxdata0)  of ddata0</p>
+
+#### NXDATA1_f1 field
+
+<p>WIRI</p>
+
+### AXDATA0 register
+
+- Absolute Address: 0x8080C790
+- Base Offset: 0x790
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA0_f0|  rw  |  —  |  — |
+|63:32|AXDATA0_f1|  rw  |  —  |  — |
+
+#### AXDATA0_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata0 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer</p>
+
+### AXDATA1 register
+
+- Absolute Address: 0x8080C798
+- Base Offset: 0x798
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA1_f0|  rw  |  —  |  — |
+|63:32|AXDATA1_f1|  rw  |  —  |  — |
+
+#### AXDATA1_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata1 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer.</p>
+
+### AXPROGBUFF0 register
+
+- Absolute Address: 0x8080C7A0
+- Base Offset: 0x7A0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF0|  rw  |  —  |  — |
+
+#### AXPROGBUFF0 field
+
+<p>This register shadows the nxprogbuf0 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### AXPROGBUFF1 register
+
+- Absolute Address: 0x8080C7A8
+- Base Offset: 0x7A8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF1|  rw  |  —  |  — |
+
+#### AXPROGBUFF1 field
+
+<p>This register shadows the nxprogbuf1 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### NXPROGBUFF0 register
+
+- Absolute Address: 0x8080C7B0
+- Base Offset: 0x7B0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF0|  rw  |  —  |  — |
+
+#### NXPROGBUFF0 field
+
+<p>This register holds bits 64-95 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### NXPROGBUFF1 register
+
+- Absolute Address: 0x8080C7B8
+- Base Offset: 0x7B8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF1|  rw  |  —  |  — |
+
+#### NXPROGBUFF1 field
+
+<p>This register holds bits 96-127 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### ABSCMD register
+
+- Absolute Address: 0x8080C7C0
+- Base Offset: 0x7C0
+- Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+|63:0|  ABSCMD  |  rw  |  —  |  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x8080D000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
+
+|Offset| Identifier|    Name   |
+|------|-----------|-----------|
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
+
+### NXDATA0 register
+
+- Absolute Address: 0x8080D780
+- Base Offset: 0x780
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA0_f0|  rw  |  —  |  — |
+|63:32|NXDATA0_f1|  rw  |  —  |  — |
+
+#### NXDATA0_f0 field
+
+<p>The low (nxdata0)  of ddata0</p>
+
+#### NXDATA0_f1 field
+
+<p>WIRI</p>
+
+### NXDATA1 register
+
+- Absolute Address: 0x8080D788
+- Base Offset: 0x788
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA1_f0|  rw  |  —  |  — |
+|63:32|NXDATA1_f1|  rw  |  —  |  — |
+
+#### NXDATA1_f0 field
+
+<p>The high (nxdata0)  of ddata0</p>
+
+#### NXDATA1_f1 field
+
+<p>WIRI</p>
+
+### AXDATA0 register
+
+- Absolute Address: 0x8080D790
+- Base Offset: 0x790
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA0_f0|  rw  |  —  |  — |
+|63:32|AXDATA0_f1|  rw  |  —  |  — |
+
+#### AXDATA0_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata0 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer</p>
+
+### AXDATA1 register
+
+- Absolute Address: 0x8080D798
+- Base Offset: 0x798
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA1_f0|  rw  |  —  |  — |
+|63:32|AXDATA1_f1|  rw  |  —  |  — |
+
+#### AXDATA1_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata1 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer.</p>
+
+### AXPROGBUFF0 register
+
+- Absolute Address: 0x8080D7A0
+- Base Offset: 0x7A0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF0|  rw  |  —  |  — |
+
+#### AXPROGBUFF0 field
+
+<p>This register shadows the nxprogbuf0 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### AXPROGBUFF1 register
+
+- Absolute Address: 0x8080D7A8
+- Base Offset: 0x7A8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF1|  rw  |  —  |  — |
+
+#### AXPROGBUFF1 field
+
+<p>This register shadows the nxprogbuf1 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### NXPROGBUFF0 register
+
+- Absolute Address: 0x8080D7B0
+- Base Offset: 0x7B0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF0|  rw  |  —  |  — |
+
+#### NXPROGBUFF0 field
+
+<p>This register holds bits 64-95 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### NXPROGBUFF1 register
+
+- Absolute Address: 0x8080D7B8
+- Base Offset: 0x7B8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF1|  rw  |  —  |  — |
+
+#### NXPROGBUFF1 field
+
+<p>This register holds bits 96-127 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### ABSCMD register
+
+- Absolute Address: 0x8080D7C0
+- Base Offset: 0x7C0
+- Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+|63:0|  ABSCMD  |  rw  |  —  |  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x8080E000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
+
+|Offset| Identifier|    Name   |
+|------|-----------|-----------|
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
+
+### NXDATA0 register
+
+- Absolute Address: 0x8080E780
+- Base Offset: 0x780
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA0_f0|  rw  |  —  |  — |
+|63:32|NXDATA0_f1|  rw  |  —  |  — |
+
+#### NXDATA0_f0 field
+
+<p>The low (nxdata0)  of ddata0</p>
+
+#### NXDATA0_f1 field
+
+<p>WIRI</p>
+
+### NXDATA1 register
+
+- Absolute Address: 0x8080E788
+- Base Offset: 0x788
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|NXDATA1_f0|  rw  |  —  |  — |
+|63:32|NXDATA1_f1|  rw  |  —  |  — |
+
+#### NXDATA1_f0 field
+
+<p>The high (nxdata0)  of ddata0</p>
+
+#### NXDATA1_f1 field
+
+<p>WIRI</p>
+
+### AXDATA0 register
+
+- Absolute Address: 0x8080E790
+- Base Offset: 0x790
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA0_f0|  rw  |  —  |  — |
+|63:32|AXDATA0_f1|  rw  |  —  |  — |
+
+#### AXDATA0_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata0 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer</p>
+
+### AXDATA1 register
+
+- Absolute Address: 0x8080E798
+- Base Offset: 0x798
+- Size: 0x8
+
+| Bits|Identifier|Access|Reset|Name|
+|-----|----------|------|-----|----|
+| 31:0|AXDATA1_f0|  rw  |  —  |  — |
+|63:32|AXDATA1_f1|  rw  |  —  |  — |
+
+#### AXDATA1_f0 field
+
+<p>This register is shadow, and have the same layout as the nxdata1 register. A write to this register "wakes up" a halted hart, after ddata0 is written, and starts execution from the beginning of the instruction buffer.</p>
+
+### AXPROGBUFF0 register
+
+- Absolute Address: 0x8080E7A0
+- Base Offset: 0x7A0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF0|  rw  |  —  |  — |
+
+#### AXPROGBUFF0 field
+
+<p>This register shadows the nxprogbuf0 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### AXPROGBUFF1 register
+
+- Absolute Address: 0x8080E7A8
+- Base Offset: 0x7A8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|AXPROGBUFF1|  rw  |  —  |  — |
+
+#### AXPROGBUFF1 field
+
+<p>This register shadows the nxprogbuf1 register. A write to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+### NXPROGBUFF0 register
+
+- Absolute Address: 0x8080E7B0
+- Base Offset: 0x7B0
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF0|  rw  |  —  |  — |
+
+#### NXPROGBUFF0 field
+
+<p>This register holds bits 64-95 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### NXPROGBUFF1 register
+
+- Absolute Address: 0x8080E7B8
+- Base Offset: 0x7B8
+- Size: 0x8
+
+|Bits| Identifier|Access|Reset|Name|
+|----|-----------|------|-----|----|
+|31:0|NXPROGBUFF1|  rw  |  —  |  — |
+
+#### NXPROGBUFF1 field
+
+<p>This register holds bits 96-127 of the instruction buffer from where instructions can be executed when the hart is halted (see also abscmd), encoded in the lower half of the register.</p>
+
+### ABSCMD register
+
+- Absolute Address: 0x8080E7C0
+- Base Offset: 0x7C0
+- Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
+
+|Bits|Identifier|Access|Reset|Name|
+|----|----------|------|-----|----|
+|63:0|  ABSCMD  |  rw  |  —  |  — |
+
+## dbg_hart register file
+
+- Absolute Address: 0x8080F000
+- Base Offset: 0x0
+- Size: 0x7C8
+- Array Dimensions: [16]
+- Array Stride: 0x1000
+- Total Size: 0x10000
+
+|Offset| Identifier|    Name   |
+|------|-----------|-----------|
+| 0x780|  NXDATA0  |  NXDATA0  |
+| 0x788|  NXDATA1  |  NXDATA1  |
+| 0x790|  AXDATA0  |  AXDATA0  |
+| 0x798|  AXDATA1  |  AXDATA1  |
+| 0x7A0|AXPROGBUFF0|AXPROGBUFF0|
+| 0x7A8|AXPROGBUFF1|AXPROGBUFF1|
+| 0x7B0|NXPROGBUFF0|NXPROGBUFF0|
+| 0x7B8|NXPROGBUFF1|NXPROGBUFF1|
+| 0x7C0|   ABSCMD  |   ABSCMD  |
 
 ### NXDATA0 register
 
 - Absolute Address: 0x8080F780
-- Base Offset: 0xF780
+- Base Offset: 0x780
 - Size: 0x8
 
 | Bits|Identifier|Access|Reset|Name|
@@ -3758,7 +6270,7 @@ the CSRRW returns 0x1; otherwise, it returns 0x0.</p>
 ### NXDATA1 register
 
 - Absolute Address: 0x8080F788
-- Base Offset: 0xF788
+- Base Offset: 0x788
 - Size: 0x8
 
 | Bits|Identifier|Access|Reset|Name|
@@ -3777,7 +6289,7 @@ the CSRRW returns 0x1; otherwise, it returns 0x0.</p>
 ### AXDATA0 register
 
 - Absolute Address: 0x8080F790
-- Base Offset: 0xF790
+- Base Offset: 0x790
 - Size: 0x8
 
 | Bits|Identifier|Access|Reset|Name|
@@ -3792,7 +6304,7 @@ the CSRRW returns 0x1; otherwise, it returns 0x0.</p>
 ### AXDATA1 register
 
 - Absolute Address: 0x8080F798
-- Base Offset: 0xF798
+- Base Offset: 0x798
 - Size: 0x8
 
 | Bits|Identifier|Access|Reset|Name|
@@ -3807,7 +6319,7 @@ the CSRRW returns 0x1; otherwise, it returns 0x0.</p>
 ### AXPROGBUFF0 register
 
 - Absolute Address: 0x8080F7A0
-- Base Offset: 0xF7A0
+- Base Offset: 0x7A0
 - Size: 0x8
 
 |Bits| Identifier|Access|Reset|Name|
@@ -3821,7 +6333,7 @@ the CSRRW returns 0x1; otherwise, it returns 0x0.</p>
 ### AXPROGBUFF1 register
 
 - Absolute Address: 0x8080F7A8
-- Base Offset: 0xF7A8
+- Base Offset: 0x7A8
 - Size: 0x8
 
 |Bits| Identifier|Access|Reset|Name|
@@ -3835,7 +6347,7 @@ the CSRRW returns 0x1; otherwise, it returns 0x0.</p>
 ### NXPROGBUFF0 register
 
 - Absolute Address: 0x8080F7B0
-- Base Offset: 0xF7B0
+- Base Offset: 0x7B0
 - Size: 0x8
 
 |Bits| Identifier|Access|Reset|Name|
@@ -3849,7 +6361,7 @@ the CSRRW returns 0x1; otherwise, it returns 0x0.</p>
 ### NXPROGBUFF1 register
 
 - Absolute Address: 0x8080F7B8
-- Base Offset: 0xF7B8
+- Base Offset: 0x7B8
 - Size: 0x8
 
 |Bits| Identifier|Access|Reset|Name|
@@ -3863,16 +6375,14 @@ the CSRRW returns 0x1; otherwise, it returns 0x0.</p>
 ### ABSCMD register
 
 - Absolute Address: 0x8080F7C0
-- Base Offset: 0xF7C0
+- Base Offset: 0x7C0
 - Size: 0x8
+
+<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
 
 |Bits|Identifier|Access|Reset|Name|
 |----|----------|------|-----|----|
 |63:0|  ABSCMD  |  rw  |  —  |  — |
-
-#### ABSCMD field
-
-<p>This register holds bits 0-63 of the instruction buffer from where instructions can be executed when the hart is halted. The first instruction in the buffer is in the lower order 16 or 32 bits of the ABSCMD register. Writing to this register wakes up a halted hart, after the instruction buffer is written, and starts execution from the beginning of the instruction buffer, until either an ebreak instruction is executed or the end of the instruction buffer is reached, at which point the hart goes back to being halted.</p>
 
 ## D_neigh address map
 

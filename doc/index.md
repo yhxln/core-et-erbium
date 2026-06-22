@@ -2,12 +2,14 @@
 title: Erbium Technical Reference manual.
 overview: Introduction to the chip
 author: Vijayvithal
-header-includes: |
-  \usepackage{longtable,booktabs}
-  \usepackage{adjustbox}
-  \let\origtabular\tabular
-  \let\endorigtabular\endtabular
-  \renewenvironment{tabular}[1]{\adjustbox{max width=\textwidth}\origtabular{#1}}{\endorigtabular}
+header-includes:
+  - |
+    \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}
+    \usepackage{longtable,booktabs}
+    \usepackage{adjustbox}
+    \let\origtabular\tabular
+    \let\endorigtabular\endtabular
+    \renewenvironment{tabular}[1]{\adjustbox{max width=\textwidth}\origtabular{#1}}{\endorigtabular}
 ---
 # Overview
 
