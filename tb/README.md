@@ -86,7 +86,8 @@ The folder hierarchy will look like this:
 If you want to build the RTL once and run the same test multiple times or different tests using the same build, you can achieve that by passing the same `ELF_RUN_ROOT` when doing `make`.
 
 ### RISCV
-Path to the RISC‑V toolchain. If not provided, it defaults to `/tools/aifoundry/riscv/20251103`
+Path to the RISC‑V toolchain. Source `.autoenv.zsh` after setting `RISCV`, or
+put `riscv64-unknown-elf-gcc` on `PATH` before sourcing `.autoenv.zsh`.
 
 ### SIM
 Simulator backend. Currently only supports `vcs` or `verilator`. If not provided, it defaults to `vcs`.
