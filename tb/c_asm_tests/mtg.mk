@@ -17,7 +17,7 @@ print-mtg-regress-tests:
 		echo "  - $$t"; \
 	done
 
-compile_mtg_16t: create_run_dir
+compile_mtg_16t: check_riscv_toolchain create_run_dir
 	echo "MTG test is $(MTG_TEST)"; \
 	echo "MTG seed is $(SEED)"; \
 	elf_name=mtg_16t_$(MTG_TEST)_$(SEED) && \

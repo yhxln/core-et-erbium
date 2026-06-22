@@ -154,6 +154,13 @@ check_autoenv:
 		exit 1; \
 	fi
 
+check_riscv_toolchain:
+	@if ! command -v riscv64-unknown-elf-gcc >/dev/null 2>&1; then \
+		echo "ERROR: riscv64-unknown-elf-gcc not found"; \
+		echo "Set RISCV=<toolchain-root> before sourcing .autoenv.zsh, or add the toolchain bin directory to PATH."; \
+		exit 1; \
+	fi
+
 check_test_elf:
 	@if [ -z "$(TEST_ELF)" ] && [ -z "$(BOOTROM)" ]; then \
 		echo "ERROR: You must call make with TEST_ELF=<file>"; \
