@@ -29,17 +29,49 @@ export NOC_INCDIRS=${NOC_INCDIRS:-"+incdir+$HDLET_ROOT/ip/erbium_noc/deps/common
 export BOOKER_NCI=$HDLET_ROOT/ip/ni700_ErbiumET/logical/ni700_ErbiumET/logical/ni700_ErbiumET
 export REPOROOT=$HDLET_ROOT/ip/cpu_subsystem/
 export RTLROOT=$REPOROOT/rtl
-export BSC_PATH=/prj/bsvlib/bdir:+
-# Bluespec-generated Verilog primitive libraries used by the RTL filelists.
-# Defaults preserve the historical install paths/versions; override to point at
-# a Bluespec install in an arbitrary path. BSC_VLIB_TOP is used by the top
-# integration filelists, BSC_VLIB_ET by the MRAM (erbium-et) bridge.
-export BSC_VLIB_TOP=${BSC_VLIB_TOP:-/tools/opt/bsc/latest/lib/Verilog}
-export BSC_VLIB_ET=${BSC_VLIB_ET:-/tools/bluespec/2025.07/lib/Verilog}
+
+# Bluespec toolchain root. If the user provides BLUESPEC_HOME, make its bsc
+# visible. Otherwise, if bsc is already visible, infer BLUESPEC_HOME from it.
+if [ -n "$BLUESPEC_HOME" ]; then
+	case ":$PATH:" in
+		*":$BLUESPEC_HOME/bin:"*) : ;;
+		*) export PATH="$BLUESPEC_HOME/bin:$PATH" ;;
+	esac
+elif command -v bsc >/dev/null 2>&1; then
+	_bsc_bin="$(command -v bsc)"
+	export BLUESPEC_HOME="$(cd "$(dirname "$_bsc_bin")/.." && pwd)"
+	unset _bsc_bin
+fi
+
+# Filelists consume the generated primitive Verilog directory directly. Keep
+# explicit BSC_VLIB_* overrides, otherwise derive both from BLUESPEC_HOME.
+if [ -n "$BLUESPEC_HOME" ] && [ -d "$BLUESPEC_HOME/lib/Verilog" ]; then
+	: "${BSC_VLIB_TOP:=$BLUESPEC_HOME/lib/Verilog}"
+	: "${BSC_VLIB_ET:=$BLUESPEC_HOME/lib/Verilog}"
+fi
+export BSC_VLIB_TOP
+export BSC_VLIB_ET
 export PYTHONPATH=$PYTHONPATH:$HDLET_ROOT
 export MINION_DIAGS=$HDLET_ROOT/tb/c_asm_tests
 
-source $HDLET_ROOT/scripts/select_riscv_tools.sh
+# RISC-V toolchain root. If the user provides RISCV, make its gcc visible.
+# Otherwise, if gcc is already visible, infer RISCV from it for Makefile users.
+if [ -n "$RISCV" ]; then
+	for _rvbin in "$RISCV/bin" "$RISCV"/*/bin; do
+		if [ -x "$_rvbin/riscv64-unknown-elf-gcc" ]; then
+			case ":$PATH:" in
+				*":$_rvbin:"*) : ;;
+				*) export PATH="$_rvbin:$PATH" ;;
+			esac
+			break
+		fi
+	done
+	unset _rvbin
+elif command -v riscv64-unknown-elf-gcc >/dev/null 2>&1; then
+	_rvgcc="$(command -v riscv64-unknown-elf-gcc)"
+	export RISCV="$(cd "$(dirname "$_rvgcc")/.." && pwd)"
+	unset _rvgcc
+fi
 
 function update_submodules {
 	cd ip/xspi && git checkout feature/hb_debug && git pull && cd -

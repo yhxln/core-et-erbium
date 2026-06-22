@@ -22,9 +22,7 @@ ELF_RUN_ROOT := elf_run_$(shell date +%s)
 endif
 override ELF_RUN_ROOT := $(abspath $(ELF_RUN_ROOT))
 
-RISCV ?= /tools/aifoundry/riscv/20251103
 export RISCV
-export PATH := $(PATH):$(RISCV)/bin
 
 SIM ?= vcs
 ifeq ($(SIM),verilator)

@@ -47,7 +47,12 @@ That file exports critical variables used by test compilation:
   sourcing to swap in a different NoC filelist (e.g. the proprietary NIC-700).
 - `BOOKER_NCI` — proprietary NIC-700 generator output path (only used when the
   NIC-700 is swapped in)
-- `BSC_PATH`
+- `BSC_VLIB_TOP` / `BSC_VLIB_ET` — Bluespec Verilog primitive library paths.
+  Derived from `BLUESPEC_HOME` or `bsc` on `PATH`; pre-export these when a flow
+  needs specific generated primitive versions.
+- `RISCV` — RISC-V toolchain root. Pre-export it before sourcing
+  `.autoenv.zsh`, or put `riscv64-unknown-elf-gcc` on `PATH`.
+  When `RISCV` is set, `.autoenv.zsh` checks `$RISCV/bin` and `$RISCV/*/bin`.
 
 Manual fallback if you do not want to source `.autoenv.zsh`:
 
@@ -55,6 +60,14 @@ Manual fallback if you do not want to source `.autoenv.zsh`:
 export HDLET_ROOT="$(git rev-parse --show-toplevel)"
 export RTLROOT="$HDLET_ROOT/ip/cpu_subsystem/rtl"
 export NOC_FLIST="$HDLET_ROOT/ip/erbium_noc/flow/erbium_noc.f"
+export RISCV="<riscv-toolchain-root>"
+export BLUESPEC_HOME="<bluespec-root>"
+for rvbin in "$RISCV/bin" "$RISCV"/*/bin; do
+  [ -x "$rvbin/riscv64-unknown-elf-gcc" ] && export PATH="$rvbin:$PATH" && break
+done
+export PATH="$BLUESPEC_HOME/bin:$PATH"
+export BSC_VLIB_TOP="<bluespec-root>/lib/Verilog"
+export BSC_VLIB_ET="$BSC_VLIB_TOP"
 ```
 
 ## Getting submodules
